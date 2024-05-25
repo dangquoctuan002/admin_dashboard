@@ -1,0 +1,67 @@
+.ck-body-wrapper{
+    display: none !important;
+}
+.ck-rounded-corners{
+   min-height: 180px;
+
+}
+
+
+/* *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.ck-editor__editable_inline {
+    background-color: white;
+    color: gray;
+    padding: 16px;
+    border: 1px solid rgb(196, 196, 196);
+    border-radius: 16px;
+   
+}
+.ck-powered-by{
+    overflow: hidden;
+}
+.ck-rounded-corners{
+    width: 800px !important;
+    margin-bottom: 100px !important;
+
+}
+.ck-sticky-panel__content{
+
+}
+.ck-editor__main{
+  
+}
+.ck-toolbar{
+    padding: 0 !important;
+}
+.ck-editor__editable{
+    padding: 0 !important;
+}
+.ck.ck-toolbar {
+    background-color: rgb(219, 219, 219);
+    border-radius: 5%;
+    border-color: gray;
+
+}
+
+.ck.ck-button {
+    color: rgb(43, 43, 43);
+
+}
+.ck.ck-button:hover {
+    background-color: rgb(206, 206, 206);
+
+}
+
+
+.ck.ck-dropdown__panel {
+}
+
+.ck.ck-list__item {
+}
+.ck-body-wrapper{
+    display: none !important;
+} */
