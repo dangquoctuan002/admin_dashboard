@@ -168,6 +168,11 @@ function create(props) {
       setSelectedDescription(description);
     }
 
+    if (!image) {
+      toast.warning("Product photo does not exist !");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8000/api/products", {
         method: "POST",
@@ -228,7 +233,7 @@ function create(props) {
         }}
         className="w-screen h-screen bg-black-rgba fixed top-0 left-0 z-50"
       ></div>
-      <div className="w-[90%] h-[90vh] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-gray-200 overflow-y-auto z-50 ">
+      <div className="w-[90%] h-[90vh] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-gray-200 overflow-y-auto z-50 hide-scrollbar">
         <form className="h-full px-8 py-2 " encType="multipart/form-data">
           <div className="w-full flex justify-between items-center flex-wrap">
             <h2 className="py-4">Add new product</h2>

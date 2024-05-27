@@ -1,6 +1,8 @@
 // MenuItem.js
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const itemVariants = {
   open: {
@@ -20,13 +22,45 @@ const colors = [
   { name: "White", code: "#FFFFFF" },
 ];
 
-export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
-  const [selectedName, setSelectedName] = useState("");
-  const [selectedPrice, setSelectedPrice] = useState("");
-  const [selectedQuantity, setSelectedQuantity] = useState("");
-  const [selectedFrameSize, setSelectedFrameSize] = useState("S");
-  const [selectedWheelSize, setSelectedWheelSize] = useState("24");
-  const [selectedColor, setSelectedColor] = useState("#FFFFFF");
+export default function MenuItem({
+  id,
+  isOpen,
+  onToggle,
+  onUpdate,
+  initialData,
+}) {
+  const [selectedName, setSelectedName] = useState(
+    initialData.selectedName || ""
+  );
+  const [selectedPrice, setSelectedPrice] = useState(
+    initialData.selectedPrice || ""
+  );
+  const [selectedQuantity, setSelectedQuantity] = useState(
+    initialData.selectedQuantity || ""
+  );
+  const [selectedFrameSize, setSelectedFrameSize] = useState(
+    initialData.selectedFrameSize || "S"
+  );
+  const [selectedWheelSize, setSelectedWheelSize] = useState(
+    initialData.selectedWheelSize || "24"
+  );
+  const [selectedColor, setSelectedColor] = useState(
+    initialData.selectedColor || "#FFFFFF"
+  );
+  
+
+  const [_Name, _setName] = useState("")
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedName(initialData.selectedName || "");
+      setSelectedPrice(initialData.selectedPrice || "");
+      setSelectedQuantity(initialData.selectedQuantity || "");
+      setSelectedFrameSize(initialData.selectedFrameSize || "S");
+      setSelectedWheelSize(initialData.selectedWheelSize || "24");
+      setSelectedColor(initialData.selectedColor || "#FFFFFF");
+    }
+  }, [isOpen, initialData]);
 
   const handleFrameSizeClick = (size) => {
     setSelectedFrameSize(size);
@@ -38,6 +72,24 @@ export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
     setSelectedColor(color);
   };
 
+  const handleUpdate = () => {
+    if (!selectedName || !selectedPrice || !selectedQuantity) {
+      toast.error("Please enter complete information !");
+      return;
+    }
+    _setName(selectedName)
+    onUpdate({
+      id,
+      selectedName,
+      selectedPrice,
+      selectedQuantity,
+      selectedFrameSize,
+      selectedWheelSize,
+      selectedColor,
+    });
+    onToggle();
+  };
+
   return (
     <motion.nav
       initial={false}
@@ -45,11 +97,11 @@ export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
       className="w-full h-8 mb-2 border border-gray-400 rounded cursor-pointer bg-gray-200"
     >
       <motion.span
-        onClick={onToggle}
+        onClick={() => { onToggle, handleUpdate() }}
         whileTap={{ scale: 0.97 }}
         className="w-full h-full flex justify-between items-center px-4"
       >
-        <motion.div>Add</motion.div>
+        <motion.div> {_Name ? _Name : "Item"} </motion.div>
 
         <motion.div
           variants={{
@@ -99,10 +151,11 @@ export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
               setSelectedName(e.target.value);
             }}
             value={selectedName}
+            disabled={!isOpen}
           />
         </motion.li>
 
-        <motion.li className="price w-1/2 mb-3 pr-2" variants={itemVariants}>
+        <motion.li className="price min-w-[60px] w-1/2 mb-3 pr-2" variants={itemVariants}>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="price"
@@ -113,10 +166,11 @@ export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
               setSelectedPrice(e.target.value);
             }}
             value={selectedPrice}
+            disabled={!isOpen}
           />
         </motion.li>
 
-        <motion.li className="quantity w-1/2 mb-3 pl-2" variants={itemVariants}>
+        <motion.li className="quantity min-w-[60px] w-1/2 mb-3 pl-2" variants={itemVariants}>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="quantity"
@@ -128,6 +182,7 @@ export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
               setSelectedQuantity(e.target.value);
             }}
             value={selectedQuantity}
+            disabled={!isOpen}
           />
         </motion.li>
 
@@ -167,8 +222,8 @@ export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
           </ul>
         </motion.li>
 
-        <motion.li className="mb-2 m-auto" variants={itemVariants}>
-          <ul className="flex flex-wrap justify-between items-center gap-4">
+        <motion.li className="Color w-full my-2 m-auto" variants={itemVariants}>
+          <ul className="flex flex-wrap justify-between items-center gap-2">
             {colors.map((color) => (
               <li
                 key={color.name}
@@ -183,6 +238,17 @@ export default function MenuItem({ id, isOpen, onToggle, onDelete }) {
               />
             ))}
           </ul>
+        </motion.li>
+
+        <motion.li className="btn-save mb-2 m-auto" variants={itemVariants}>
+          {isOpen && (
+            <span
+              onClick={handleUpdate}
+              className="block mx-auto mt-4 px-4 py-2 bg-purple-400 hover:bg-purple-700 text-white rounded"
+            >
+              Lưu
+            </span>
+          )}
         </motion.li>
       </motion.ul>
     </motion.nav>

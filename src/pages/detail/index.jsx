@@ -21,23 +21,58 @@ const colors = [
 ];
 
 function index(props) {
-
   const [menuItems, setMenuItems] = useState([]);
   const [nextId, setNextId] = useState(1);
   const [openItemId, setOpenItemId] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [data, setData] = useState({});
 
+  const [formData, setFormData] = useState({});
+
   const handleAdd = () => {
-    setMenuItems([...menuItems, nextId]);
+    if (
+      openItemId !== null &&
+      (!formData[openItemId]?.selectedName ||
+        !formData[openItemId]?.selectedPrice ||
+        !formData[openItemId]?.selectedQuantity)
+    ) {
+
+      toast.error("Please fill in the information before adding new information.");
+      return;
+    }
+    const newId = nextId;
+    setMenuItems([...menuItems, newId]);
+    setFormData({
+      ...formData,
+      [newId]: {
+        selectedName: "",
+        selectedPrice: "",
+        selectedQuantity: "",
+        selectedFrameSize: "S",
+        selectedWheelSize: "24",
+        selectedColor: "#FFFFFF",
+      },
+    });
     setNextId(nextId + 1);
+    setOpenItemId(newId);
   };
+
 
   const handleDelete = () => {
     if (openItemId !== null) {
       setMenuItems(menuItems.filter((item) => item !== openItemId));
+      const updatedFormData = { ...formData };
+      delete updatedFormData[openItemId];
+      setFormData(updatedFormData);
       setOpenItemId(null);
     }
+  };
+
+  const handleUpdate = (data) => {
+    setFormData((prev) => ({
+      ...prev,
+      [data.id]: data,
+    }));
   };
 
   const handleToggle = (id) => {
@@ -74,13 +109,14 @@ function index(props) {
           <div className="w-full h-[calc(70vh-96px)]  flex justify-center items-start gap-4">
             <div className="w-3/4 h-full">
               <div className="hide-scrollbar w-full h-full p-4 mb-5 rounded-lg border-inherit overflow-y-auto bg-white">
-                
                 {menuItems.map((id) => (
                   <MenuItem
                     key={id}
                     id={id}
                     isOpen={id === openItemId}
                     onToggle={() => handleToggle(id)}
+                    onUpdate={handleUpdate}
+                    initialData={formData[id]}
                   />
                 ))}
               </div>
@@ -118,9 +154,12 @@ function index(props) {
                 <button
                   className="bg-purple-400 hover:bg-purple-600 text-white font-bold p-4 berder border-gray-500 rounded focus:outline-none focus:shadow-outline"
                   type="button"
+                  onClick={() => {
+                    console.dir(formData);
+                  }}
                   // onClick={created}
                 >
-                  Add
+                  Oke
                 </button>
               </div>
             </div>
